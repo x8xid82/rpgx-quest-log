@@ -1,305 +1,194 @@
-# rpgx-quest-log
-### AI-Powered Quest Tracking for Foundry VTT
-A full-featured quest tracking system for GMs and players. Supports drag-and-drop characters and items, milestone tracking, auto-split XP and currency, and loot distribution. Pairs with RPGX Proton for AI-powered quest generation using live character sheet context. Free and Pro tiers available.
+# RPGX Quest Log
 
-
-
-
-**Version:** v1.0.1 
-**Last Updated:** April 2026
-**Compatibility:** Foundry VTT v11+ (Verified on v13)
-**License:** MIT
+**by Ashton Rogers / RPGX / X8 Studios**
+[rpgxstudios.com](https://www.rpgxstudios.com) · [Discord](https://discord.gg/2xYN3FF4U) · [Patreon](https://www.patreon.com/c/rpgxstudios) · [Facebook](https://www.facebook.com/p/RPGX-Game-Studios-100063706171843/)
 
 ---
 
-> ⚠️ **Early Access** — RPGX Quest Log is currently in Gold Tier early access on [Patreon](https://www.patreon.com/c/rpgxstudios). The public release will follow after the Gold Tier testing period. Gold Tier Patrons receive the module directly and can update natively through Foundry once the public release is live.
+## What Is RPGX Quest Log?
+
+RPGX Quest Log is a comprehensive quest tracking system for Foundry VTT, designed for Game Masters who want more than a notepad. It gives you a living, player-facing quest board with full GM control — from posting jobs, tracking active missions, and managing rewards, all the way to generating entirely new quests using local AI that understands your actual campaign world.
+
+It is built to work in all three Foundry deployment scenarios: remote hosted servers, local network setups, and single-machine GM stations.
 
 ---
 
-## What is RPGX Quest Log?
+## Compatibility
 
-RPGX Quest Log is a full-featured, GM and player-facing quest tracking system for Foundry VTT. It gives Game Masters a clean, powerful interface to create, manage, and distribute quests — with optional AI-powered generation that reads your actual character sheets to produce quests that feel native to your world and its people.
-
-It is part of the **RPGX Toolbelt** — a growing ecosystem of interconnected Foundry modules and desktop tools built around local AI, privacy, and a seamless GM experience.
-
-No cloud. No subscriptions required for core features. No data leaves your machine.
-
----
-
-## Features
-
-### Core Features — Free for Everyone
-
-- **Quest Manager** — Create and manage quests with a dedicated sheet interface. Each quest has a player-facing description, GM-only notes, status tracking, milestones, and a full reward system.
-- **Quest Log Panel** — A floating, always-accessible panel showing all quests organized by status: Active, Completed, Failed, and Abandoned.
-- **Drag-and-Drop Characters** — Drop actors directly onto a quest sheet to assign quest-givers and quest recipients. Supports multiple quest-givers per quest.
-- **Drag-and-Drop Items** — Drop items from your world onto the rewards section. Assign specific items to specific characters before distributing.
-- **Milestone Tracking** — Add milestone objectives to any quest. Mark them complete or failed individually. Optionally reveal milestones to players or keep them hidden until the right moment.
-- **Hidden GM Milestones** — A separate freeform notes field for GM-only milestone tracking that players never see.
-- **Reward Distribution** — One-click XP award split evenly across all assigned characters. One-click currency distribution split evenly across all assigned characters. Per-item loot assignment lets you direct specific items to specific party members.
-- **Reward Visibility Toggle** — Rewards can be hidden from players until the GM is ready to reveal them.
-- **Player View** — Players can open the Quest Log and see quests they are assigned to, with the player-facing description. GM notes, hidden milestones, and hidden rewards are never exposed.
-- **Quest Status System** — Active, Completed, Failed, and Abandoned statuses with clear visual indicators.
-- **Chat Commands** — Open the Quest Log from Foundry chat with `/quest`, `/questlog`, or `/ql`.
-- **Multiplayer Sync** — All quest changes sync to all connected players in real time via Foundry's socket system.
-- **Up to 10 Quests** — Free tier supports up to 10 active quests per world.
-
-### Pro Features — Requires RPGX Proton + Patreon Subscription
-
-- **Unlimited Quests** — No cap on the number of quests per world.
-- **AI Quest Generation** — Generate complete quests using a locally running Ollama model. The AI reads your quest sheet's assigned characters — pulling their biography, personality traits, ideals, bonds, flaws, creature type, and alignment — to write quests that feel like they belong in your world.
-- **Context-Aware NPC Voice** — Quest-givers' alignment shapes the AI's portrayal of their hidden motivations. A Lawful Evil patron's quest reads very differently in GM Notes than a Neutral Good one.
-- **Prompt Guidance** — Optionally provide a theme or premise to steer generation. Leave it blank for a fully original quest.
-
----
-
-## The RPGX Toolbelt Ecosystem
-
-RPGX Quest Log is one part of a larger connected system. All RPGX modules are designed to work together:
-
-| Module / App | Role |
+| | |
 |---|---|
-| **RPGX Quest Log** | Quest tracking, AI generation, reward distribution |
-| **RPGX AI Assistant** | Chat-based AI queries from Foundry chat, RAG knowledge base |
-| **RPGX Proton** | Desktop companion — Ollama management, RAG server, subscription validation |
-| **RPGX Loot Crate** | Party inventory, trade, and item crafting system |
-| **RPGX Character Forge** | Portrait and Token generation based on character sheet content |
-| **RPGX Combatant** | AI-controlled NPC actions based on situation and improved targeting system |
-| **RPGX Scrybe** | Importer for ScrybeQuill game notes |
-| **RPGX Droidsheet** | Smartphone app and module for simplified table interface |
-
-**RPGX Proton** is the connective tissue. It runs a local server on your machine that all RPGX modules communicate with. It proxies requests to Ollama (solving browser CORS restrictions), manages the RAG knowledge database, validates Patreon subscriptions, and will serve as the hub for future RPGX modules.
-
-Download RPGX Proton free with a 14-day free trial at [rpgxstudios.com](https://www.rpgxstudios.com).
+| **Foundry VTT** | v10 minimum · v14 verified |
+| **Game Systems** | System-agnostic (D&D 5e, PF2e, and others) |
+| **RPGX Proton** | Required for Pro features |
+| **RPGX AI Assistant** | Optional — shares token and system settings automatically |
 
 ---
 
-## How AI Quest Generation Works
+## Free Tier Features
 
-When you click **Generate Quest**, the module:
+Everything below is available to all users with no subscription required.
 
-1. Looks up every actor in your **Quest Givers** and **Assigned Characters** sections against live Foundry actor sheets.
-2. Extracts available character data — biography (both Public and Details sections for NPC sheets), creature type, alignment, personality traits, ideals, bonds, and flaws. Any fields that don't exist for a given game system are silently skipped.
-3. Sends that context to RPGX Proton, which proxies the request to your local Ollama instance.
-4. The AI produces a structured quest with a player-facing description and a GM-only notes section, shaped by the characters on your sheet.
-5. The result is dropped directly into the quest fields, ready for review and editing before saving.
+### Quest Tracking
+- **Quest Log window** — a resizable, minimizable panel accessible from the floating toolbar button or chat commands `/quest`
+- **Five quest statuses** — Job Board, Active, Completed, Failed, and Abandoned, each with its own tab
+- **Up to 10 quests per world** — create and manage up to ten quests without any subscription
+- **One-click status changes** — click the coloured status stripe on any quest row to instantly change its status without opening the full sheet
+- **Right-click context menu** — alternate power-user access to status changes directly from the quest list
 
-The entire pipeline is local — Foundry → Proton → Ollama → back. No data is sent anywhere external.
+### Quest Sheet
+- **Quest title, player-facing description, and GM-only notes** — all stored separately so players only ever see what you want them to see
+- **Auto-save** — description, GM notes, and hidden milestone text save automatically as you type, debounced so nothing is lost
+- **Quest status selector** — change status directly from within the sheet
 
-### System Agnostic
+### Job Board
+- **Player-visible job board** — all users can see Job Board quests, even without being assigned
+- **Player quest claiming** — players can drag and drop their own characters onto a Job Board quest to claim it; the GM's client processes the claim and posts a chat card announcing who accepted
+- **Automatic status transition** — claimed quests move from Job Board to Active automatically
 
-The character data extraction is designed to work across game systems. It tries common field paths used by D&D 5e, Pathfinder 2e, and generic systems. If a field doesn't exist in the active system, it is skipped without error. The AI always generates something — it just generates with less context if the system stores data differently.
+### Drag-and-Drop
+- **Quest givers** — drag any actor onto the quest giver zone; supports multiple quest givers per quest
+- **Quest recipients** — drag actors onto the recipient zone to assign them
+- **Reward items** — drag any item from the world or compendium directly onto the rewards panel
+
+### Reward Distribution
+- **XP auto-split** — distributes total XP evenly across all assigned characters and updates their sheets directly
+- **Currency auto-split** — splits GP, SP, and CP evenly with remainder going to the first character; PP supported
+- **Custom currency field** — free-text field for non-standard currencies or special rewards
+- **Loot assignment and transfer** — assign individual reward items to specific characters, then transfer them all to inventory in one click
+- **Reveal rewards toggle** — GM controls when reward details become visible to players
+
+### Milestones
+- **Add, complete, fail, and remove milestones** — track quest objectives individually
+- **Hidden milestones** — a GM-only text field for secret objectives players haven't discovered yet
+- **Reveal milestones toggle** — make milestones visible to players when the time is right
+
+### Multi-Player Sync
+- **Real-time socket updates** — all connected clients (GM and players) see quest changes immediately without refreshing
+- **Role-based access** — players only see quests they are assigned to; Job Board quests are visible to everyone
+- **Click-through portraits** — players can click quest giver and recipient portraits to open their character sheets
 
 ---
 
-## Requirements
+## Pro Features — Unlocked via RPGX Proton
 
-| Requirement | Notes |
+Pro features require the **RPGX Proton** desktop application to be running on the GM's computer with an active Patreon subscription. Proton is the sole validator — no license keys, no cloud accounts. Subscription status is verified silently on load and re-checked every 30 minutes.
+
+[**Download RPGX Proton Free**](https://rpgxstudios.com) · [**Subscribe on Patreon**](https://www.patreon.com/c/rpgxstudios)
+
+### Unlimited Quests
+Free tier allows up to 10 quests per world. Pro removes that cap entirely — no limit on how many quests your world can hold.
+
+### AI Quest Generation
+The flagship Pro feature. Open any quest sheet, navigate to the **AI Generate** tab, optionally enter a theme or premise, and click Generate. The AI writes a complete quest tailored to your campaign — title, player-facing description, and full GM notes including the real plot, villain motivation, a twist, encounter suggestions, and campaign hooks.
+
+**How generation works:**
+
+1. **World lore search** — before calling the AI, the system queries your RPGX RAG knowledge base for lore relevant to the characters involved. Journal entries, actor biographies, session notes, and any ingested documents are searched using hybrid semantic and keyword retrieval. Relevant chunks are injected into the prompt as authoritative campaign facts.
+
+2. **Character context** — the quest giver's and recipients' full character sheet data is read live at generation time: alignment, race, class, background, ideals, bonds, flaws, traits, and biography (including NPC public and detail biography blocks). This data is used to personalise the quest and find narrative threads connecting the characters involved.
+
+3. **Alignment-driven storytelling** — the AI applies different rules based on the quest giver's alignment:
+   - **Evil givers** deceive the players in the description. The quest is made to sound benign, heroic, or profitable. The GM notes expose the true sinister goal, the exact lie being told, and what actually happens if the party succeeds.
+   - **Neutral givers** are self-interested — honest about what benefits them, quiet about what doesn't.
+   - **Good givers** are transparent and earnest. GM notes may still include hardship or moral complexity, but there is no manipulation.
+   - If alignment is not set on the sheet, the AI infers it from biography, ideals, bonds, and flaws.
+
+4. **Genre matching** — quests are written to fit the game system set in RPGX AI Assistant settings. D&D gets fantasy and political intrigue. Cyberpunk gets corporate espionage and street-level danger. Star Wars gets galactic stakes. The tone is always native to the system.
+
+5. **Robust output parsing** — the AI response is processed through a multi-strategy parser that handles chain-of-thought bleed, model reasoning text, extra fields, and malformed JSON gracefully. If the model produces multiple attempts, the cleanest one is used automatically.
+
+**AI Model Tiers** — select based on your hardware:
+
+| Tier | Model | RAM Required |
+|---|---|---|
+| Lite | qwen2.5:3b | 4–6 GB |
+| Standard ⭐ | qwen2.5:7b | 8 GB+ |
+| Performance | qwen2.5:14b | 16 GB+ |
+| Ultra | qwen3:30b | 32 GB+ |
+
+Custom model names are also supported for advanced users.
+
+Additional AI settings: generation timeout (30–600 seconds), and creativity/temperature (0.5 Structured → 1.5 Wild).
+
+---
+
+## Integration with RPGX AI Assistant
+
+If the **RPGX AI Assistant** module is also installed, Quest Log integrates with it automatically:
+
+- **Shared auth token** — Quest Log reads the AI Assistant's Proton token automatically. No duplicate configuration needed.
+- **Shared game system** — the system set in AI Assistant settings (D&D 5e, Pathfinder, Cyberpunk, etc.) is used by Quest Log's AI generation for genre-accurate quests.
+- **Shared RAG knowledge base** — the same world documents, actor biographies, and journal entries ingested by AI Assistant power Quest Log's world lore context injection.
+
+If Quest Log is installed standalone without AI Assistant, both the token and game system are configured independently in Quest Log's own module settings.
+
+---
+
+## Integration with RPGX Proton
+
+RPGX Proton is the GM's local AI companion desktop application. It manages Ollama (the local AI engine), the RAG knowledge base server, and subscription validation — all running privately on your own machine. No data leaves your computer.
+
+Quest Log connects to Proton in three ways:
+
+**HTTP (AI generation and subscription)** — the module makes authenticated fetch requests to Proton's local server for AI generation (`/ollama/generate`), world lore search (`/search`), and subscription validation (`/api/subscription`). All requests carry a Bearer token validated server-side.
+
+**Foundry WebSocket (Proton Bridge)** — Proton connects to Foundry's existing WebSocket as a client and exchanges quest data in real time. Proton can read all quests, receive live updates when quests change, and push status changes back to the world — without any polling or separate connection infrastructure.
+
+**Proton Quest Panel** — the Proton desktop app includes a dedicated quest view that mirrors the Foundry Quest Log, letting the GM manage quests from the companion app without switching to the browser.
+
+---
+
+## Security — Upgraded from Beta
+
+The v1.0.0 release includes a complete security overhaul compared to the beta builds:
+
+- **Bearer token authentication** — every HTTP request from the Foundry module to the Proton RAG server carries an `Authorization: Bearer` header. Requests without a valid token are rejected with a 401 before any processing occurs.
+- **CORS origin allowlisting** — the RAG server only accepts browser requests from the GM's configured Foundry URL. No other webpage can reach the server.
+- **Private Network Access headers** — the server sends PNA headers to prevent rogue HTTPS pages from exploiting the local server.
+- **Timing-safe token comparison** — the server uses `timingSafeEqual` from Node's `crypto` module to compare tokens, preventing timing-based token guessing attacks.
+- **Cross-module token sharing** — when both RPGX AI Assistant and Quest Log are installed, they share one token automatically. Changing the token in one place updates both.
+- **GM-only data writes** — only the GM client processes socket messages that modify quest data. Player clients are structurally excluded from write operations regardless of what socket messages they send.
+- **Subscription validation isolation** — Proton detection and subscription status are checked in two independent steps so a subscription endpoint issue can never make Proton appear offline.
+
+---
+
+## Chat Commands
+
+| Command | Action |
 |---|---|
-| Foundry VTT v11+ | Verified on v13 |
-| [RPGX Proton](https://www.rpgxstudios.com) | Required for AI generation and unlimited quests |
-| [Ollama](https://ollama.com) | Required for AI generation. Managed through Proton. |
-| Patreon Subscription | Required for Pro features — [patreon.com/c/rpgxstudios](https://www.patreon.com/c/rpgxstudios) |
-
-Core quest tracking, milestone management, and reward distribution require only Foundry VTT. Proton and Ollama are only needed for AI generation and to remove the free-tier quest cap.
+| `/quest` | Open or focus the Quest Log |
+| `/questlog` | Open or focus the Quest Log |
+| `/ql` | Open or focus the Quest Log |
 
 ---
 
-## Installation
+## Settings Reference
 
-### Via Foundry Module Manager (Recommended)
-
-1. Open Foundry VTT
-2. Go to **Settings → Install Add-on Module**
-3. Paste the manifest URL:
-   ```
-   https://github.com/x8xid82/rpgx-quest-log/releases/latest/download/module.json
-   ```
-4. Click **Install**
-
-### Manual Installation
-
-1. Download the latest `rpgx-quest-log.zip` from the [Releases](https://github.com/x8xid82/rpgx-quest-log/releases) page
-2. Extract the zip into your Foundry `Data/modules/` folder so the path reads `Data/modules/rpgx-quest-log/`
-3. Restart Foundry VTT
-4. Enable the module in your world under **Settings → Manage Modules**
+| Setting | Scope | Description |
+|---|---|---|
+| RPGX Proton URL | World | Address of the Proton server. Default: `http://127.0.0.1:3033` |
+| RPGX Proton Auth Token | World | Bearer token matching Proton's settings page. Shared automatically with AI Assistant if installed. |
+| AI Model Tier | World | Model selection dropdown with Lite / Standard / Performance / Ultra tiers plus custom input |
+| AI Generation Timeout | World | 30–600 seconds. Increase for larger models. |
+| AI Creativity | World | Temperature 0.5–1.5. Controls how structured or wild the generated content is. |
 
 ---
 
-## Configuration
+## What's New in v1.0.0 vs Beta
 
-Once the module is enabled in your world:
-
-1. Go to **Settings → Module Settings → RPGX Quest Log**
-2. Set the **RPGX Proton URL** — default is `http://127.0.0.1:3033`. Only change this if you have configured Proton to use a different port or if your Foundry server is on a different machine on your network.
-3. Set the **Ollama AI Model** — the model used for quest generation. Must be installed in Ollama via Proton. Recommended: `qwen2.5:14b`, `llama3`, `mistral`, or `gemma2`.
-
-### Deployment Scenarios
-
-RPGX Quest Log and Proton are designed to work in all three common Foundry setups:
-
-**Local — Foundry running on your own machine**
-Proton runs alongside Foundry on the same machine. Default settings work out of the box.
-
-**LAN — Foundry on a dedicated machine on your home network**
-Proton runs on the GM's machine. Set the Proton URL in module settings to the GM machine's local IP, e.g. `http://192.168.1.50:3033`. Players connect to Foundry as normal — only the GM's machine needs Proton.
-
-**Remote — Foundry hosted externally (e.g. The Forge, a VPS)**
-Proton runs on the GM's local machine. The module in the browser-hosted Foundry communicates back to Proton over the local network or via a configured address. Proton includes the `Access-Control-Allow-Private-Network` header to satisfy Chrome's Private Network Access requirements for HTTPS-to-localhost requests.
-
----
-
-## Using the Quest Log
-
-### Opening the Quest Log
-
-- Click the **scroll icon** in the RPGX Toolbar (bottom-left of the Foundry UI)
-- Or type `/quest`, `/questlog`, or `/ql` in the Foundry chat
-
-### Creating a Quest
-
-1. Click **New Quest** in the Quest Log panel
-2. The Quest Sheet opens with three tabs: **Details**, **Rewards**, and **AI Generate**
-3. Enter a title, write the player-facing description, and add GM notes
-4. Drag actors from the sidebar onto the **Quest Givers** and **Assigned Characters** drop zones
-5. Click **Save Quest**
-
-### Managing Milestones
-
-- Click **Add Milestone** to create a new objective
-- Click the checkmark to mark a milestone complete, or the X to mark it failed
-- Toggle **Reveal Milestones** to make them visible to players
-- Use the **Hidden GM Milestones** field for internal tracking that players never see
-
-### Distributing Rewards
-
-1. Switch to the **Rewards** tab
-2. Set XP, currency (PP/GP/SP/CP), and optionally a custom currency
-3. Drag items from the sidebar onto the **Items** drop zone
-4. Assign specific items to specific characters using the dropdown per item
-5. Click **Award XP**, **Distribute Currency**, or **Award Loot** individually
-6. Toggle **Reveal Rewards** when you're ready for players to see what they earned
-
-### AI Quest Generation (Pro)
-
-1. Add at least one actor to the **Quest Givers** section for best results
-2. Switch to the **AI Generate** tab
-3. Optionally type a theme or premise in the prompt field, or leave it blank for a fully original quest
-4. Click **Generate Quest**
-5. Review the generated title, description, and GM notes
-6. Edit as needed and click **Save Quest**
-
----
-
-## Architecture
-
-```
-┌─────────────────────────────┐
-│      Foundry VTT            │
-│  (browser — local or remote)│
-│                             │
-│  RPGX Quest Log Module      │
-│    quest-sheet-app.js       │
-│    ollama.js                │
-│    quest-store.js           │
-│    proton-bridge.js         │
-└────────────┬────────────────┘
-             │ HTTP → port 3033
-             ▼
-┌─────────────────────────────┐
-│      RPGX Proton            │
-│  (GM's local machine)       │
-│                             │
-│  Express Server (server.cjs)│
-│    /ollama/generate  proxy  │
-│    /api/subscription        │
-│    /ask  (RAG queries)      │
-│    /ingest                  │
-└────────────┬────────────────┘
-             │ HTTP → port 11434
-             ▼
-┌─────────────────────────────┐
-│      Ollama                 │
-│  (GM's local machine)       │
-│  qwen2.5:14b / llama3 / etc │
-└─────────────────────────────┘
-```
-
-All AI inference happens locally on the GM's machine. No data is transmitted externally at any point.
-
----
-
-## Free vs Pro
-
-| Feature | Free | Pro |
-|---|:---:|:---:|
-| Quest tracking | ✅ | ✅ |
-| Milestone tracking | ✅ | ✅ |
-| Drag-and-drop characters | ✅ | ✅ |
-| Reward distribution (XP, currency, loot) | ✅ | ✅ |
-| Player quest view | ✅ | ✅ |
-| Multiplayer sync | ✅ | ✅ |
-| Chat commands | ✅ | ✅ |
-| Quest limit | 10 | Unlimited |
-| AI quest generation | ❌ | ✅ |
-| Character sheet context in AI | ❌ | ✅ |
-
-Pro features unlock when RPGX Proton is running with an active Patreon subscription. Proton handles all validation locally — there are no license keys, no activation servers, and no accounts to create.
-
----
-
-## Changelog
-
-### v1.0.1 — April 2026
-- AI quest generation now reads quest-giver character sheets for richer, more personalized output
-- Pulls NPC biography (both Public and Details sections), creature type, alignment, personality traits, ideals, bonds, and flaws
-- Alignment actively shapes the quest-giver's hidden motivations in GM Notes — each alignment produces meaningfully different quest hooks
-- System-agnostic character data extraction — works with any Foundry game system, silently skips missing fields
-- AI responses locked to gender-neutral character language
-- AI responses locked to the language of the GM's prompt — no mid-response language switching
-
-### v1.0.0 — Early Access Release
-- Initial release under Gold Tier early access
-- Quest creation, editing, status management
-- Drag-and-drop quest-givers (multiple supported), assignees, and items
-- Milestone system with player reveal toggle
-- Hidden GM milestones field
-- XP distribution, currency distribution, per-item loot assignment
-- Reward visibility toggle
-- Player-facing quest view filtered by assigned characters
-- AI quest generation via Ollama through RPGX Proton
-- Optional prompt field for AI generation
-- Free tier: up to 10 quests per world
-- Pro tier: unlimited quests, AI generation
-- Subscription validation via RPGX Proton — no license keys
-- Foundry socket sync for multiplayer
-- Chat commands: `/quest`, `/questlog`, `/ql`
-- Proton connection status displayed in module settings
-
----
-
-## Privacy
-
-RPGX Quest Log makes zero external network calls. All data stays within your local machine or network. Quest data is stored in Foundry's own world settings. AI queries travel from your browser to Proton on your local machine, then to Ollama on your local machine, and back. Nothing leaves your network at any point.
-
----
-
-## License
-
-MIT License — Copyright © 2026 RPGX Studios | X8 Studios
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----
-
-## Credits
-
-**Written & Designed by:** Ashton Rogers
-**Studio:** RPGX Studios | X8 Studios
+- Full production security hardening (Bearer auth, CORS, PNA, timing-safe comparison)
+- AI quest generation with world lore context injection via RAG knowledge base
+- Alignment-inferred quest tone — AI reads biography and personality fields when alignment is not explicitly set
+- Common thread personalisation — AI actively looks for connections between quest givers and recipients
+- Genre-accurate output based on game system setting
+- Robust multi-strategy JSON parser handling chain-of-thought bleed, malformed output, and extra model fields
+- Two-stage generation progress indicator (Searching world lore → Generating quest)
+- Proton detection split into independent ping and subscription steps
+- Multiple quest givers per quest (assigners array)
+- Job Board tab with player claiming via drag-and-drop
+- Real-time socket sync across all connected clients
+- Right-click context menu for status changes
+- Inline status change dialog from the quest list
 
 ---
 
@@ -307,9 +196,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 | | |
 |---|---|
-| 🌐 Website | [rpgxstudios.com](https://www.rpgxstudios.com) |
+| 🌐 Website | [rpgxstudios.com](https://rpgxstudios.com) |
 | 💬 Discord | [discord.gg/2xYN3FF4U](https://discord.gg/2xYN3FF4U) |
 | ❤️ Patreon | [patreon.com/c/rpgxstudios](https://www.patreon.com/c/rpgxstudios) |
 | 📘 Facebook | [RPGX Game Studios](https://www.facebook.com/p/RPGX-Game-Studios-100063706171843/) |
-| 📦 Releases | [GitHub Releases](https://github.com/x8xid82/rpgx-quest-log/releases) |
-| 🎬 YouTube | [RPGX Studios](https://www.youtube.com/@rpgxstudios) |
+
+---
+
+*RPGX Quest Log is a product of RPGX Studios / X8 Studios. © 2026 Ashton Rogers. All rights reserved.*
+*RPGX Proton and RPGX AI Assistant are companion products available at rpgxstudios.com.*
