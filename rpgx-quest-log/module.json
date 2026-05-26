@@ -1,0 +1,38 @@
+{
+  "id": "rpgx-quest-log",
+  "title": "RPGX Quest Log",
+  "description": "A comprehensive, GM and player-facing quest tracking system. Features AI-powered quest generation via Ollama, drag-and-drop characters and items, auto-split XP and currency, and full integration with the RPGX Proton companion app.",
+  "last update":"05/25/2026",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "14.367"
+  },
+  "authors": [
+    {
+      "name": "Ashton Rogers / RPGX / X8 Studios",
+      "url": "https://www.rpgxstudios.com",
+      "discord": "https://discord.gg/2xYN3FF4U",
+      "facebook": "https://www.facebook.com/p/RPGX-Game-Studios-100063706171843/",
+      "patreon": "https://www.patreon.com/c/rpgxstudios"
+    }
+  ],
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/rpgx-quest-log.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "socket": true,
+  "url": "https://www.rpgxstudios.com",
+  "manifest": "https://github.com/x8xid82/rpgx-quest-log/releases/latest/download/module.json",
+  "download": "https://github.com/x8xid82/rpgx-quest-log/releases/download/v1.0.0/rpgx-quest-log.zip",
+  "license": "MIT"
+}

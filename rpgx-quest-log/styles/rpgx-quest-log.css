@@ -1,0 +1,1523 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RPGX Quest Log — Stylesheet
+   Dark theme with gold/amber accents. Designed to feel at home in Foundry's UI
+   while being distinctive and polished enough to stand on its own.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── DESIGN TOKENS ──────────────────────────────────────────────────────── */
+
+.rpgx-app {
+  /* Colors */
+  --rpgx-bg:           #1a1a2e;
+  --rpgx-surface:      #22223a;
+  --rpgx-surface-2:    #2a2a48;
+  --rpgx-border:       #3a3a5c;
+  --rpgx-border-light: #4a4a70;
+
+  --rpgx-gold:         #d4a944;
+  --rpgx-gold-dim:     #7a6030;
+  --rpgx-gold-glow:    rgba(212, 169, 68, 0.15);
+
+  --rpgx-text:         #e0d8cc;
+  --rpgx-text-dim:     #8a8aaa;
+  --rpgx-text-bright:  #f5efe0;
+
+  /* Status colors */
+  --rpgx-active:       #3dba5a;
+  --rpgx-active-dim:   rgba(61, 186, 90, 0.15);
+  --rpgx-completed:    #4a9eff;
+  --rpgx-completed-dim: rgba(74, 158, 255, 0.15);
+  --rpgx-failed:       #e84040;
+  --rpgx-failed-dim:   rgba(232, 64, 64, 0.15);
+  --rpgx-abandoned:    #ff8c00;
+  --rpgx-abandoned-dim: rgba(255, 140, 0, 0.15);
+
+  /* Spacing */
+  --rpgx-pad:     12px;
+  --rpgx-pad-sm:  8px;
+  --rpgx-pad-xs:  4px;
+  --rpgx-radius:  6px;
+  --rpgx-radius-sm: 4px;
+
+  /* Typography */
+  --rpgx-font:    'Signika', 'Palatino Linotype', Georgia, serif;
+}
+
+/* ─── BASE RESET FOR BOTH APPS ───────────────────────────────────────────── */
+
+.rpgx-app.app {
+  background: var(--rpgx-bg);
+  border: 1px solid var(--rpgx-border);
+  border-radius: var(--rpgx-radius);
+  color: var(--rpgx-text);
+  font-family: var(--rpgx-font);
+}
+
+.rpgx-app .window-content {
+  background: var(--rpgx-bg);
+  padding: 0;
+  overflow: hidden;
+}
+
+.rpgx-app button { cursor: pointer; }
+.rpgx-app * { box-sizing: border-box; }
+
+/* ─── BUTTONS ────────────────────────────────────────────────────────────── */
+
+.rpgx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--rpgx-radius-sm);
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-family: var(--rpgx-font);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.rpgx-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rpgx-btn-primary {
+  background: var(--rpgx-gold);
+  color: #1a1200;
+  border-color: var(--rpgx-gold);
+  font-weight: 600;
+}
+.rpgx-btn-primary:hover:not(:disabled) {
+  background: #e8bc55;
+  box-shadow: 0 0 12px var(--rpgx-gold-glow);
+}
+
+.rpgx-btn-secondary {
+  background: var(--rpgx-surface-2);
+  color: var(--rpgx-text);
+  border-color: var(--rpgx-border);
+}
+.rpgx-btn-secondary:hover:not(:disabled) {
+  background: var(--rpgx-surface);
+  border-color: var(--rpgx-border-light);
+}
+
+.rpgx-btn-danger {
+  background: rgba(232, 64, 64, 0.15);
+  color: var(--rpgx-failed);
+  border-color: rgba(232, 64, 64, 0.4);
+}
+.rpgx-btn-danger:hover:not(:disabled) {
+  background: var(--rpgx-failed);
+  color: white;
+}
+
+.rpgx-btn-ai {
+  background: linear-gradient(135deg, #5a3af7, #9b45e0);
+  color: white;
+  border-color: #7a4af0;
+  font-weight: 600;
+  width: 100%;
+  justify-content: center;
+  padding: 10px;
+  font-size: 14px;
+}
+.rpgx-btn-ai:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6b4af8, #b055f0);
+  box-shadow: 0 0 20px rgba(130, 60, 230, 0.4);
+}
+
+/* Icon-only buttons */
+.rpgx-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: var(--rpgx-radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--rpgx-text-dim);
+  font-size: 11px;
+  transition: all 0.12s;
+}
+.rpgx-icon-btn:hover {
+  background: var(--rpgx-surface-2);
+  color: var(--rpgx-text);
+  border-color: var(--rpgx-border);
+}
+.rpgx-icon-btn.danger:hover {
+  background: var(--rpgx-failed-dim);
+  color: var(--rpgx-failed);
+  border-color: rgba(232,64,64,0.3);
+}
+
+/* ─── TABS ───────────────────────────────────────────────────────────────── */
+
+.rpgx-app .tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--rpgx-border);
+  background: var(--rpgx-surface);
+  padding: 0 var(--rpgx-pad);
+  margin: 0;
+}
+
+.rpgx-app .tabs .item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  color: var(--rpgx-text-dim);
+  font-size: 12px;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+.rpgx-app .tabs .item:hover { color: var(--rpgx-text); }
+.rpgx-app .tabs .item.active {
+  color: var(--rpgx-gold);
+  border-bottom-color: var(--rpgx-gold);
+}
+
+.rpgx-tab-count {
+  background: var(--rpgx-gold-dim);
+  color: var(--rpgx-gold);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.rpgx-tab-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rpgx-gold);
+  display: inline-block;
+}
+
+/* ─── SECTIONS ───────────────────────────────────────────────────────────── */
+
+.rpgx-section {
+  margin-bottom: var(--rpgx-pad);
+}
+
+.rpgx-section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rpgx-text-dim);
+  margin-bottom: 6px;
+}
+
+.rpgx-section-label-sm {
+  font-size: 11px;
+  color: var(--rpgx-text-dim);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.rpgx-label-note {
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--rpgx-text-dim);
+  opacity: 0.7;
+}
+
+.rpgx-gm-only {
+  color: #ff9f50;
+  opacity: 1;
+}
+
+/* ─── FORM INPUTS ────────────────────────────────────────────────────────── */
+
+.rpgx-app input[type="text"],
+.rpgx-app input[type="number"],
+.rpgx-app textarea {
+  background: var(--rpgx-surface-2);
+  border: 1px solid var(--rpgx-border);
+  border-radius: var(--rpgx-radius-sm);
+  color: var(--rpgx-text);
+  font-family: var(--rpgx-font);
+  font-size: 13px;
+  padding: 6px 10px;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+.rpgx-app input[type="text"]:focus,
+.rpgx-app input[type="number"]:focus,
+.rpgx-app textarea:focus {
+  border-color: var(--rpgx-gold-dim);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--rpgx-gold-glow);
+}
+
+.rpgx-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.rpgx-input-full { width: 100%; }
+
+/* ─── DROP ZONES ─────────────────────────────────────────────────────────── */
+
+.rpgx-drop-zone {
+  border: 2px dashed var(--rpgx-border);
+  border-radius: var(--rpgx-radius);
+  background: var(--rpgx-surface);
+  padding: var(--rpgx-pad-sm);
+  min-height: 48px;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.rpgx-drop-zone:not(.no-drop):hover {
+  border-color: var(--rpgx-border-light);
+}
+
+.rpgx-drop-zone.drag-over {
+  border-color: var(--rpgx-gold);
+  background: var(--rpgx-gold-glow);
+  box-shadow: 0 0 12px var(--rpgx-gold-glow);
+}
+
+.rpgx-drop-zone.no-drop {
+  border-style: solid;
+  cursor: default;
+}
+
+.rpgx-drop-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--rpgx-text-dim);
+  font-size: 12px;
+  padding: var(--rpgx-pad-xs);
+  pointer-events: none;
+}
+
+.rpgx-drop-hint i { opacity: 0.5; }
+.rpgx-drop-hint.small { padding: 2px; font-size: 11px; }
+
+/* ─── ACTOR PORTRAITS ────────────────────────────────────────────────────── */
+
+.rpgx-actor-portrait {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--rpgx-border);
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.rpgx-actor-portrait:hover {
+  border-color: var(--rpgx-gold);
+  transform: scale(1.08);
+}
+
+.rpgx-actor-card {
+  display: flex;
+  align-items: center;
+  gap: var(--rpgx-pad-sm);
+}
+
+.rpgx-actor-name {
+  font-size: 13px;
+  color: var(--rpgx-text);
+  flex: 1;
+}
+
+.rpgx-no-portrait {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--rpgx-surface-2);
+  border: 2px dashed var(--rpgx-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rpgx-text-dim);
+  font-size: 12px;
+}
+
+/* Assignees */
+.rpgx-assignees-zone { min-height: 56px; }
+
+.rpgx-assignees-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rpgx-pad-sm);
+  margin-bottom: var(--rpgx-pad-xs);
+}
+
+.rpgx-assignee-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--rpgx-surface-2);
+  border: 1px solid var(--rpgx-border);
+  border-radius: 20px;
+  padding: 3px 8px 3px 3px;
+  font-size: 12px;
+  color: var(--rpgx-text);
+}
+
+/* ─── STATUS COLORS ──────────────────────────────────────────────────────── */
+
+.status-active    { --status-color: var(--rpgx-active);    --status-dim: var(--rpgx-active-dim);    }
+.status-completed { --status-color: var(--rpgx-completed); --status-dim: var(--rpgx-completed-dim); }
+.status-failed    { --status-color: var(--rpgx-failed);    --status-dim: var(--rpgx-failed-dim);    }
+.status-abandoned { --status-color: var(--rpgx-abandoned); --status-dim: var(--rpgx-abandoned-dim); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   QUEST LOG WINDOW STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.rpgx-quest-log .window-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.rpgx-log-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ─── LOG HEADER ─────────────────────────────────────────────────────────── */
+
+.rpgx-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--rpgx-pad);
+  background: var(--rpgx-surface);
+  border-bottom: 1px solid var(--rpgx-border);
+  gap: var(--rpgx-pad);
+}
+
+.rpgx-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rpgx-header-icon { color: var(--rpgx-gold); font-size: 16px; }
+.rpgx-header-title { font-size: 15px; font-weight: 600; color: var(--rpgx-text-bright); }
+
+.rpgx-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tier badges */
+.rpgx-tier-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.05em;
+}
+
+.tier-free {
+  background: var(--rpgx-surface-2);
+  color: var(--rpgx-text-dim);
+  border: 1px solid var(--rpgx-border);
+}
+
+.tier-pro {
+  background: linear-gradient(135deg, #7a5020, #c07828);
+  color: #ffe090;
+  border: 1px solid var(--rpgx-gold-dim);
+}
+
+/* ─── QUEST LIST ─────────────────────────────────────────────────────────── */
+
+.rpgx-tab-body { flex: 1; overflow-y: auto; padding: var(--rpgx-pad-sm); }
+
+.rpgx-quest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rpgx-quest-row {
+  display: flex;
+  align-items: center;
+  gap: var(--rpgx-pad-sm);
+  padding: 8px var(--rpgx-pad-sm);
+  background: var(--rpgx-surface);
+  border: 1px solid var(--rpgx-border);
+  border-left: 3px solid var(--status-color, var(--rpgx-border));
+  border-radius: var(--rpgx-radius-sm);
+  cursor: pointer;
+  transition: all 0.12s;
+  position: relative;
+  overflow: hidden;
+}
+
+.rpgx-quest-row:hover {
+  background: var(--rpgx-surface-2);
+  border-color: var(--rpgx-border-light);
+}
+
+.rpgx-quest-row .rpgx-row-assigner img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--rpgx-border);
+}
+
+.rpgx-row-assigner .rpgx-no-portrait {
+  width: 32px;
+  height: 32px;
+}
+
+.rpgx-row-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rpgx-row-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rpgx-text-bright);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rpgx-row-assignees {
+  display: flex;
+  gap: 2px;
+  margin-top: 3px;
+}
+
+.rpgx-pip {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--rpgx-surface);
+}
+
+.rpgx-row-status-stripe {
+  color: var(--status-color, var(--rpgx-text-dim));
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+}
+
+.rpgx-row-actions {
+  display: flex;
+  gap: 3px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.rpgx-quest-row:hover .rpgx-row-actions { opacity: 1; }
+
+/* ─── EMPTY STATE ────────────────────────────────────────────────────────── */
+
+.rpgx-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px var(--rpgx-pad);
+  gap: 12px;
+  color: var(--rpgx-text-dim);
+  text-align: center;
+}
+
+.rpgx-empty-icon {
+  font-size: 36px;
+  opacity: 0.2;
+}
+
+.rpgx-empty-label {
+  font-size: 14px;
+  margin: 0;
+  color: var(--rpgx-text-dim);
+}
+
+.rpgx-empty-sub {
+  font-size: 12px;
+  margin: 0;
+  opacity: 0.6;
+}
+
+/* ─── LOG FOOTER ─────────────────────────────────────────────────────────── */
+
+.rpgx-log-footer {
+  padding: var(--rpgx-pad-sm) var(--rpgx-pad);
+  border-top: 1px solid var(--rpgx-border);
+  background: var(--rpgx-surface);
+  text-align: center;
+}
+
+.rpgx-upgrade-link {
+  font-size: 11px;
+  color: var(--rpgx-gold-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.rpgx-upgrade-link:hover { color: var(--rpgx-gold); text-decoration: none; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   QUEST SHEET WINDOW STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.rpgx-quest-sheet .window-content {
+  padding: 0;
+}
+
+.rpgx-sheet-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ─── TITLE INPUT ────────────────────────────────────────────────────────── */
+
+.rpgx-sheet-title-row {
+  padding: var(--rpgx-pad);
+  background: var(--rpgx-surface);
+  border-bottom: 1px solid var(--rpgx-border);
+}
+
+.rpgx-title-input {
+  font-size: 18px !important;
+  font-weight: 700;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--rpgx-text-bright) !important;
+  padding: 0 !important;
+  width: 100%;
+}
+.rpgx-title-input:focus {
+  border-color: var(--rpgx-gold-dim) !important;
+  box-shadow: none !important;
+  background: var(--rpgx-surface-2) !important;
+  padding: 4px 8px !important;
+}
+.rpgx-title-input::placeholder { color: var(--rpgx-text-dim); font-style: italic; }
+
+.rpgx-title-display {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--rpgx-text-bright);
+  margin: 0;
+}
+
+/* ─── STATUS BAR ─────────────────────────────────────────────────────────── */
+
+.rpgx-status-bar {
+  display: flex;
+  gap: 4px;
+  padding: 8px var(--rpgx-pad);
+  background: var(--rpgx-surface);
+  border-bottom: 1px solid var(--rpgx-border);
+}
+
+.rpgx-status-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: var(--rpgx-radius-sm);
+  border: 1px solid var(--rpgx-border);
+  background: transparent;
+  color: var(--rpgx-text-dim);
+  font-size: 12px;
+  transition: all 0.12s;
+}
+
+.rpgx-status-btn:hover:not(:disabled) {
+  color: var(--status-color, var(--rpgx-text));
+  border-color: var(--status-color, var(--rpgx-border));
+  background: var(--status-dim, transparent);
+}
+
+.rpgx-status-btn.is-active {
+  color: var(--status-color);
+  border-color: var(--status-color);
+  background: var(--status-dim);
+  font-weight: 600;
+}
+
+.rpgx-status-btn:disabled { cursor: default; }
+
+/* ─── SHEET BODY ─────────────────────────────────────────────────────────── */
+
+.rpgx-sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--rpgx-pad);
+}
+
+/* GM notes section has a subtle amber-tinted bg to visually distinguish */
+.rpgx-gm-section { 
+  background: rgba(255, 160, 50, 0.04);
+  border: 1px solid rgba(255, 160, 50, 0.15);
+  border-radius: var(--rpgx-radius);
+  padding: var(--rpgx-pad-sm);
+}
+
+.rpgx-gm-textarea { 
+  border-color: rgba(255, 160, 50, 0.25) !important;
+}
+
+.rpgx-gm-textarea:focus {
+  border-color: rgba(255, 160, 50, 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(255, 160, 50, 0.1) !important;
+}
+
+.rpgx-readonly-text {
+  background: var(--rpgx-surface);
+  border: 1px solid var(--rpgx-border);
+  border-radius: var(--rpgx-radius-sm);
+  padding: var(--rpgx-pad-sm);
+  color: var(--rpgx-text);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 80px;
+}
+
+/* ─── REVEAL BAR ─────────────────────────────────────────────────────────── */
+
+.rpgx-reveal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--rpgx-pad-sm) var(--rpgx-pad);
+  background: var(--rpgx-surface);
+  border: 1px solid var(--rpgx-border);
+  border-radius: var(--rpgx-radius-sm);
+  margin-bottom: var(--rpgx-pad);
+  gap: var(--rpgx-pad);
+}
+
+.rpgx-reveal-status {
+  font-size: 12px;
+  color: var(--rpgx-text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── REWARDS ────────────────────────────────────────────────────────────── */
+
+.rpgx-items-zone { min-height: 60px; }
+
+.rpgx-items-list {
+  list-style: none;
+  margin: 0 0 6px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rpgx-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  background: var(--rpgx-surface-2);
+  border-radius: var(--rpgx-radius-sm);
+}
+
+.rpgx-item-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.rpgx-item-name { flex: 1; font-size: 13px; }
+.rpgx-item-qty { color: var(--rpgx-text-dim); font-size: 12px; }
+
+/* Currency grid */
+.rpgx-currency-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--rpgx-pad-sm);
+  margin-bottom: var(--rpgx-pad-sm);
+}
+
+.rpgx-currency-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.rpgx-currency-field label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--rpgx-gold);
+  text-transform: uppercase;
+}
+
+.rpgx-currency-input {
+  width: 100% !important;
+  text-align: center;
+  font-size: 16px !important;
+  font-weight: 600;
+}
+
+.rpgx-currency-display {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--rpgx-text-bright);
+}
+
+.rpgx-custom-currency { margin-top: var(--rpgx-pad-sm); }
+
+/* XP */
+.rpgx-xp-row {
+  display: flex;
+  align-items: center;
+  gap: var(--rpgx-pad-sm);
+}
+
+.rpgx-xp-input {
+  width: 120px !important;
+  font-size: 16px !important;
+  font-weight: 600;
+  text-align: center;
+}
+
+.rpgx-xp-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rpgx-gold);
+}
+
+.rpgx-xp-display { font-size: 16px; font-weight: 600; color: var(--rpgx-gold); }
+
+/* Rewards hidden state (players) */
+.rpgx-rewards-hidden {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px;
+  color: var(--rpgx-text-dim);
+  text-align: center;
+}
+
+.rpgx-rewards-hidden i { font-size: 32px; opacity: 0.3; }
+.rpgx-rewards-hidden p { margin: 0; font-size: 14px; }
+
+/* Distribution buttons */
+.rpgx-distribute-section {
+  border-top: 1px solid var(--rpgx-border);
+  padding-top: var(--rpgx-pad);
+  margin-top: var(--rpgx-pad);
+}
+
+.rpgx-distribute-buttons {
+  display: flex;
+  gap: var(--rpgx-pad-sm);
+}
+
+.rpgx-distribute-buttons .rpgx-btn { flex: 1; justify-content: center; }
+
+/* ─── AI PANEL ───────────────────────────────────────────────────────────── */
+
+.rpgx-ai-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rpgx-pad);
+}
+
+.rpgx-ai-header {
+  text-align: center;
+  padding: var(--rpgx-pad);
+  background: linear-gradient(135deg, rgba(90,58,247,0.1), rgba(155,69,224,0.1));
+  border: 1px solid rgba(130, 60, 230, 0.3);
+  border-radius: var(--rpgx-radius);
+}
+
+.rpgx-ai-icon {
+  font-size: 28px;
+  background: linear-gradient(135deg, #7a9fff, #d060ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rpgx-ai-header h3 { margin: 8px 0 4px; font-size: 15px; color: var(--rpgx-text-bright); }
+.rpgx-ai-header p { margin: 0; font-size: 12px; color: var(--rpgx-text-dim); line-height: 1.4; }
+
+.rpgx-ai-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: var(--rpgx-pad-sm);
+  background: rgba(255, 160, 50, 0.08);
+  border: 1px solid rgba(255, 160, 50, 0.25);
+  border-radius: var(--rpgx-radius-sm);
+  font-size: 11px;
+  color: #ffa040;
+}
+
+.rpgx-ai-warning i { margin-top: 1px; flex-shrink: 0; }
+
+.rpgx-ai-setup {
+  padding: var(--rpgx-pad-sm);
+  background: var(--rpgx-surface);
+  border: 1px solid var(--rpgx-border);
+  border-radius: var(--rpgx-radius-sm);
+  font-size: 11px;
+  color: var(--rpgx-text-dim);
+  line-height: 1.5;
+}
+.rpgx-ai-setup p { margin: 0; }
+.rpgx-ai-setup code {
+  background: var(--rpgx-surface-2);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  color: #90e090;
+}
+.rpgx-ai-setup a { color: var(--rpgx-gold); }
+
+/* ─── SHEET FOOTER ───────────────────────────────────────────────────────── */
+
+.rpgx-sheet-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--rpgx-pad-sm);
+  padding: var(--rpgx-pad-sm) var(--rpgx-pad);
+  border-top: 1px solid var(--rpgx-border);
+  background: var(--rpgx-surface);
+}
+
+.rpgx-footer-spacer { flex: 1; }
+
+/* ─── CHAT MESSAGES ──────────────────────────────────────────────────────── */
+
+.rpgx-chat-award {
+  background: linear-gradient(135deg, rgba(212, 169, 68, 0.08), rgba(212, 169, 68, 0.04));
+  border: 1px solid rgba(212, 169, 68, 0.3);
+  border-left: 3px solid var(--rpgx-gold);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ─── SCROLLBARS ─────────────────────────────────────────────────────────── */
+
+.rpgx-app ::-webkit-scrollbar { width: 6px; }
+.rpgx-app ::-webkit-scrollbar-track { background: transparent; }
+.rpgx-app ::-webkit-scrollbar-thumb {
+  background: var(--rpgx-border);
+  border-radius: 3px;
+}
+.rpgx-app ::-webkit-scrollbar-thumb:hover { background: var(--rpgx-border-light); }
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────────────────── */
+
+@keyframes rpgx-pulse-gold {
+  0%, 100% { box-shadow: 0 0 4px var(--rpgx-gold-glow); }
+  50%       { box-shadow: 0 0 16px var(--rpgx-gold-glow); }
+}
+
+.rpgx-drop-zone.drag-over {
+  animation: rpgx-pulse-gold 1s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RPGX TOOLBAR BUTTON
+   Matches AI Assistant (#rpgx-ai-toolbar-btn) exactly in size/shape/style.
+   AI Assistant: bottom:18px left:225px — blue (#6fa8dc)
+   Quest Log:    bottom:18px left:295px — gold (#d4a944)
+   Together they form the RPGX Toolbar row in the bottom-left of Foundry.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#rpgx-quest-log-toolbar-btn {
+  position: fixed;
+  bottom: 19px;
+  left: 265px;
+  width: 36px;
+  height: 36px;
+  border-radius: 60%;
+  background: rgba(30, 30, 30, 0.85);
+  border: 1px solid rgba(212, 169, 68, 0.6);
+  color: #d4a944;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+#rpgx-quest-log-toolbar-btn:hover {
+  background: rgba(50, 50, 50, 0.95);
+  border-color: #d4a944;
+  transform: scale(1.1);
+  box-shadow: 0 2px 12px rgba(212, 169, 68, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   v2 ADDITIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── QUEST ROW: DIRECT STATUS ICON BUTTONS ──────────────────────────────── */
+
+.rpgx-status-icon-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  padding: 0;
+}
+.rpgx-status-icon-btn:hover        { color: #fff; background: rgba(255,255,255,0.15); }
+.rpgx-status-icon-btn.is-current   { border-color: currentColor; opacity: 1; }
+.rpgx-status-icon-btn.status-active    { color: var(--rpgx-active); }
+.rpgx-status-icon-btn.status-completed { color: var(--rpgx-completed); }
+.rpgx-status-icon-btn.status-failed    { color: var(--rpgx-failed); }
+.rpgx-status-icon-btn.status-abandoned { color: var(--rpgx-abandoned, #ff8c00); }
+.rpgx-status-icon-btn.is-current    { background: rgba(255,255,255,0.1); }
+.rpgx-status-icon-btn.danger        { color: var(--rpgx-failed); }
+.rpgx-status-icon-btn.danger:hover  { background: rgba(232,64,64,0.2); }
+
+/* Make the row actions area wider to fit 5 buttons */
+.rpgx-row-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 4px;
+}
+
+/* ─── REWARD ITEMS: WHITE TEXT + CLICKABLE NAME ──────────────────────────── */
+
+.rpgx-item-row {
+  color: #f0ece4 !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 4px;
+}
+
+.rpgx-item-name {
+  color: #f0ece4 !important;
+  flex: 1;
+}
+
+.rpgx-item-name-link {
+  cursor: pointer;
+  text-decoration: underline dotted rgba(212,169,68,0.5);
+  transition: color 0.15s;
+}
+.rpgx-item-name-link:hover {
+  color: var(--rpgx-gold) !important;
+  text-decoration-color: var(--rpgx-gold);
+}
+
+.rpgx-item-qty { color: rgba(240,236,228,0.6); font-size: 12px; flex-shrink: 0; }
+
+/* Item assignment dropdown */
+.rpgx-item-select {
+  font-size: 11px;
+  padding: 2px 4px;
+  background: var(--rpgx-surface-2);
+  border: 1px solid var(--rpgx-border);
+  color: var(--rpgx-text);
+  border-radius: 3px;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+.rpgx-item-select:focus { border-color: var(--rpgx-gold); outline: none; }
+
+/* ─── MILESTONES ──────────────────────────────────────────────────────────── */
+
+.rpgx-milestone-list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rpgx-milestone-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+  border-left: 3px solid var(--rpgx-border);
+  transition: border-color 0.2s;
+}
+
+.rpgx-milestone-row.milestone-completed { border-left-color: var(--rpgx-active); }
+.rpgx-milestone-row.milestone-failed    { border-left-color: var(--rpgx-failed); }
+
+/* Milestone action buttons (check / X) */
+.rpgx-milestone-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+/* Check button: green when active */
+.btn-milestone-complete:hover,
+.ms-btn-active-complete {
+  background: rgba(61, 186, 90, 0.2);
+  border-color: var(--rpgx-active);
+  color: var(--rpgx-active);
+}
+
+/* X button: red when active */
+.btn-milestone-fail:hover,
+.ms-btn-active-fail {
+  background: rgba(232, 64, 64, 0.2);
+  border-color: var(--rpgx-failed);
+  color: var(--rpgx-failed);
+}
+
+/* Milestone text input */
+.rpgx-milestone-text {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rpgx-border);
+  color: var(--rpgx-text);
+  font-size: 13px;
+  padding: 2px 4px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.rpgx-milestone-text:focus     { border-bottom-color: var(--rpgx-gold); }
+.rpgx-milestone-text-display   { flex: 1; font-size: 13px; color: var(--rpgx-text); }
+
+/* Completed milestone text: strikethrough */
+.milestone-completed .rpgx-milestone-text,
+.milestone-completed .rpgx-milestone-text-display {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Failed milestone text: dim + color */
+.milestone-failed .rpgx-milestone-text,
+.milestone-failed .rpgx-milestone-text-display {
+  opacity: 0.5;
+  color: var(--rpgx-failed);
+}
+
+/* Add milestone button row */
+.rpgx-milestone-add-row {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Player view milestone status icon */
+.rpgx-milestone-status-icon {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ─── v3 PATCH: Character assignment dropdown — readable text ─────────────── */
+.rpgx-item-select {
+  color: #1a1a1a !important;
+  background-color: #e8e8e8 !important;
+  border: 1px solid #aaa !important;
+}
+/* Force option text dark — works on most platforms */
+.rpgx-item-select option {
+  color: #1a1a1a !important;
+  background-color: #ffffff !important;
+}
+
+/* ─── v3 PATCH: Quest row trash button ───────────────────────────────────── */
+.rpgx-row-trash {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(232, 64, 64, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 4px;
+  transition: all 0.15s;
+}
+.rpgx-row-trash:hover {
+  background: rgba(232, 64, 64, 0.15);
+  border-color: rgba(232, 64, 64, 0.5);
+  color: #e84040;
+}
+
+/* Adjust row layout to accommodate trash on right */
+.rpgx-quest-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* ─── CUSTOM RIGHT-CLICK CONTEXT MENU ───────────────────────────────────────
+   Pure DOM implementation — no Foundry ContextMenu dependency.
+   Appears on right-click on a quest row in the Quest Log window.          */
+
+#rpgx-row-context-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 170px;
+  background: #1e1e2e;
+  border: 1px solid rgba(212, 169, 68, 0.4);
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  animation: rpgx-menu-pop 0.1s ease;
+}
+
+@keyframes rpgx-menu-pop {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.rpgx-context-header {
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(212, 169, 68, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.rpgx-context-item {
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #d0ccc4;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.1s;
+}
+
+.rpgx-context-item:hover {
+  background: rgba(212, 169, 68, 0.12);
+  color: #fff;
+}
+
+.rpgx-context-item:last-child {
+  border-bottom: none;
+}
+
+/* ─── HIDDEN MILESTONES SECTION ─────────────────────────────────────────────
+   Sits below the milestone list, GM-only, styled like GM Notes section.   */
+
+.rpgx-hidden-milestones-section {
+  margin-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   v3 ADDITIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── QUEST COUNT BADGE (0/3) ─────────────────────────────────────────────── */
+
+.rpgx-quest-count {
+  display:      none;   /* hide the old icon+number display */
+}
+
+/* Reset base badge — override anything from the original */
+.rpgx-app .rpgx-tier-badge {
+  display:         inline-flex !important;
+  align-items:     center !important;
+  justify-content: center !important;
+  white-space:     nowrap !important;
+  line-height:     1 !important;
+  letter-spacing:  0 !important;
+  vertical-align:  middle !important;
+}
+
+.rpgx-app .tier-free {
+  background:    #22223a !important;
+  color:         #8a8aaa !important;
+  border:        1px solid #3a3a5c !important;
+  border-radius: 12px !important;
+  font-size:     11px !important;
+  font-weight:   700 !important;
+  padding:       4px 10px !important;
+}
+
+.rpgx-app .tier-pro {
+  background:    linear-gradient(135deg, #7a5020, #c07828) !important;
+  color:         #ffe090 !important;
+  border:        1px solid #7a6030 !important;
+  border-radius: 12px !important;
+  font-size:     11px !important;
+  font-weight:   700 !important;
+  padding:       4px 10px !important;
+}
+
+/* ─── QUEST ROW: CLICKABLE STATUS STRIPE ─────────────────────────────────── */
+
+.rpgx-row-status-stripe.btn-row-status {
+  cursor:        pointer !important;
+  border-radius: 4px;
+  padding:       4px 5px;
+  transition:    background 0.12s, transform 0.1s;
+  position:      relative;
+}
+
+.rpgx-row-status-stripe.btn-row-status:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform:  scale(1.15);
+}
+
+.rpgx-row-status-stripe.btn-row-status::after {
+  content:       'change';
+  position:      absolute;
+  bottom:        -14px;
+  left:          50%;
+  transform:     translateX(-50%);
+  font-size:     8px;
+  color:         #8a8aaa;
+  opacity:       0;
+  transition:    opacity 0.15s;
+  white-space:   nowrap;
+  pointer-events: none;
+}
+
+.rpgx-row-status-stripe.btn-row-status:hover::after {
+  opacity: 1;
+}
+
+/* ─── QUEST ROW: MULTIPLE ASSIGNER +N BADGE ──────────────────────────────── */
+
+.rpgx-row-assigner {
+  position:    relative;
+  flex-shrink: 0;
+}
+
+.rpgx-row-assigner-plus {
+  position:      absolute;
+  bottom:        -4px;
+  right:         -4px;
+  background:    #d4a944;
+  color:         #1a1200;
+  font-size:     8px;
+  font-weight:   700;
+  border-radius: 8px;
+  padding:       1px 4px;
+  line-height:   1;
+  pointer-events: none;
+}
+
+/* ─── AI LOCKED PANEL ─────────────────────────────────────────────────────── */
+/* All hex values are EXPLICIT — no CSS vars — so nothing can bleed through.   */
+
+.rpgx-quest-sheet .rpgx-ai-locked {
+  display:         flex !important;
+  flex-direction:  column !important;
+  align-items:     center !important;
+  justify-content: center !important;
+  padding:         28px 20px 24px !important;
+  gap:             16px !important;
+  text-align:      center !important;
+  min-height:      320px !important;
+  color:           #e0d8cc !important;
+  background:      transparent !important;
+}
+
+.rpgx-ai-lock-logo-wrap {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  min-height:      72px;
+}
+
+.rpgx-ai-lock-logo {
+  max-width:  200px;
+  max-height: 80px;
+  object-fit: contain;
+  opacity:    0.9;
+  filter:     drop-shadow(0 2px 10px rgba(0, 0, 0, 0.7));
+}
+
+/* Text shown when RPGX_Logo.png file is not found */
+.rpgx-ai-lock-logo-fallback {
+  display:        none;
+  font-size:      20px;
+  font-weight:    900;
+  line-height:    1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background:     linear-gradient(135deg, #e84040 0%, #d4a944 55%, #f0c040 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:         drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.rpgx-ai-lock-icon {
+  font-size: 28px !important;
+  color:     #d4a944 !important;
+  opacity:   0.8 !important;
+}
+
+.rpgx-ai-lock-content {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            10px;
+  max-width:      340px;
+}
+
+.rpgx-quest-sheet .rpgx-ai-locked h3 {
+  font-size:   16px !important;
+  font-weight: 700 !important;
+  color:       #f5efe0 !important;
+  margin:      0 !important;
+  line-height: 1.3 !important;
+  background:  none !important;
+  -webkit-text-fill-color: #f5efe0 !important;
+}
+
+.rpgx-quest-sheet .rpgx-ai-locked p {
+  font-size:   12px !important;
+  color:       #8a8aaa !important;
+  margin:      0 !important;
+  line-height: 1.6 !important;
+  max-width:   300px !important;
+  -webkit-text-fill-color: #8a8aaa !important;
+}
+
+.rpgx-ai-lock-key-hint {
+  font-size:  11px !important;
+  color:      #666688 !important;
+  -webkit-text-fill-color: #666688 !important;
+  margin-top: 4px !important;
+}
+
+/* ─── PATREON BUTTON ─────────────────────────────────────────────────────── */
+
+.rpgx-btn-patreon {
+  background:      #ff424d !important;
+  color:           #ffffff !important;
+  border:          1px solid #cc2030 !important;
+  border-radius:   4px !important;
+  font-weight:     600 !important;
+  font-size:       13px !important;
+  text-decoration: none !important;
+  margin-top:      4px;
+  padding:         9px 22px !important;
+  display:         inline-flex !important;
+  align-items:     center !important;
+  gap:             7px !important;
+  transition:      background 0.15s, box-shadow 0.15s;
+  cursor:          pointer;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.rpgx-btn-patreon:hover {
+  background:  #ff5561 !important;
+  border-color: #dd3040 !important;
+  box-shadow:  0 0 14px rgba(255, 66, 77, 0.35) !important;
+  color:       #ffffff !important;
+}
+
+/* ─── AI TAB LOCK ICON ───────────────────────────────────────────────────── */
+
+.rpgx-tab-lock-icon {
+  font-size:      9px;
+  color:          #6a6a88;
+  margin-left:    3px;
+  vertical-align: middle;
+}
+
+/* ─── QUEST LOG FOOTER ───────────────────────────────────────────────────── */
+
+.rpgx-log-footer {
+  padding:    8px 12px;
+  border-top: 1px solid #3a3a5c;
+  background: #22223a;
+  text-align: center;
+}
+
+.rpgx-upgrade-link {
+  font-size:       11px;
+  color:           #7a6030;
+  text-decoration: none;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             5px;
+  transition:      color 0.15s;
+}
+
+.rpgx-upgrade-link:hover {
+  color:           #d4a944;
+  text-decoration: none;
+}
+
+.rpgx-upgrade-link .fa-patreon {
+  color: #ff424d;
+}

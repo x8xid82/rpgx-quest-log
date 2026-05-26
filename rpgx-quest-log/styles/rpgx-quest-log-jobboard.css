@@ -1,0 +1,47 @@
+/**
+ * RPGX Quest Log — Job Board Status Styling
+ * Add this to styles/rpgx-quest-log.css
+ */
+
+/* Job Board status color - orange to match the icon */
+.status-jobboard {
+  background-color: #ffa500 !important;
+  border-color: #ffa500 !important;
+}
+
+.status-jobboard:hover {
+  background-color: #ff8c00 !important;
+  border-color: #ff8c00 !important;
+}
+
+/* Job Board tab styling */
+.rpgx-tabs .item[data-tab="jobboard"] {
+  color: #ffa500;
+}
+
+.rpgx-tabs .item[data-tab="jobboard"].active {
+  border-bottom-color: #ffa500;
+}
+
+/* Job Board chat card styling */
+.rpgx-chat-claim {
+  padding: 10px;
+  background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
+  border-radius: 6px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(255, 165, 0, 0.3);
+}
+
+.rpgx-chat-claim strong {
+  font-size: 1.1em;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.rpgx-chat-claim em {
+  font-style: italic;
+  opacity: 0.95;
+  display: block;
+  margin: 5px 0;
+}

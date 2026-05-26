@@ -1,0 +1,250 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RPGX Quest Log — CSS Patch v3 (UPDATED)
+   Append to the bottom of rpgx-quest-log.css
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ─── FIX 1: QUEST COUNT BADGE (0/3) ─────────────────────────────────────── */
+/* Override the base .rpgx-tier-badge to be a tight inline pill.               */
+
+.rpgx-tier-badge {
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  white-space:    nowrap;
+  line-height:    1;
+  vertical-align: middle;
+  letter-spacing: 0;
+}
+
+.tier-free {
+  background:    #22223a;
+  color:         #8a8aaa;
+  border:        1px solid #3a3a5c;
+  border-radius: 12px;
+  font-size:     11px;
+  font-weight:   700;
+  padding:       4px 10px;
+}
+
+.tier-pro {
+  background:    linear-gradient(135deg, #7a5020, #c07828);
+  color:         #ffe090;
+  border:        1px solid #7a6030;
+  border-radius: 12px;
+  font-size:     11px;
+  font-weight:   700;
+  padding:       4px 10px;
+}
+
+
+/* ─── QUEST ROW: CLICKABLE STATUS STRIPE ─────────────────────────────────── */
+
+.rpgx-row-status-stripe.btn-row-status {
+  cursor:        pointer;
+  border-radius: 4px;
+  padding:       4px 5px;
+  transition:    background 0.12s, transform 0.1s;
+  position:      relative;
+}
+
+.rpgx-row-status-stripe.btn-row-status:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform:  scale(1.15);
+}
+
+.rpgx-row-status-stripe.btn-row-status::after {
+  content:      'change';
+  position:     absolute;
+  bottom:       -14px;
+  left:         50%;
+  transform:    translateX(-50%);
+  font-size:    8px;
+  color:        #8a8aaa;
+  opacity:      0;
+  transition:   opacity 0.15s;
+  white-space:  nowrap;
+  pointer-events: none;
+}
+
+.rpgx-row-status-stripe.btn-row-status:hover::after {
+  opacity: 1;
+}
+
+
+/* ─── QUEST ROW: MULTIPLE ASSIGNER +N BADGE ──────────────────────────────── */
+
+.rpgx-row-assigner {
+  position:    relative;
+  flex-shrink: 0;
+}
+
+.rpgx-row-assigner-plus {
+  position:      absolute;
+  bottom:        -4px;
+  right:         -4px;
+  background:    #d4a944;
+  color:         #1a1200;
+  font-size:     8px;
+  font-weight:   700;
+  border-radius: 8px;
+  padding:       1px 4px;
+  line-height:   1;
+  pointer-events: none;
+}
+
+
+/* ─── FIX 2 & 3: AI LOCKED PANEL ─────────────────────────────────────────── */
+/* All colors are hard hex values so nothing can bleed in from parent styles.  */
+
+.rpgx-ai-locked {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  padding:         28px 20px 24px;
+  gap:             16px;
+  text-align:      center;
+  min-height:      320px;
+  color:           #e0d8cc;   /* reset any inherited tint */
+}
+
+/* Logo wrapper — holds the <img> + the text fallback */
+.rpgx-ai-lock-logo-wrap {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  min-height:      72px;
+}
+
+/* The actual logo image */
+.rpgx-ai-lock-logo {
+  max-width:  200px;
+  max-height: 80px;
+  object-fit: contain;
+  opacity:    0.9;
+  filter:     drop-shadow(0 2px 10px rgba(0, 0, 0, 0.7));
+}
+
+/* Shown via JS (onerror swap) when the image file isn't found.
+   Styled to look like the RPGX brand — red→gold gradient text. */
+.rpgx-ai-lock-logo-fallback {
+  display:        none;   /* shown by JS on image error */
+  font-size:      22px;
+  font-weight:    900;
+  line-height:    1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background:     linear-gradient(135deg, #e84040 0%, #d4a944 55%, #f0c040 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:         drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+}
+
+/* Lock icon above the heading */
+.rpgx-ai-lock-icon {
+  font-size: 28px;
+  color:     #d4a944;
+  opacity:   0.8;
+}
+
+/* Content column */
+.rpgx-ai-lock-content {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            10px;
+  max-width:      340px;
+}
+
+/* Heading — bright, matches the quest title style */
+.rpgx-ai-locked h3 {
+  font-size:   16px;
+  font-weight: 700;
+  color:       #f5efe0;
+  margin:      0;
+  line-height: 1.3;
+}
+
+/* Body paragraphs — matches inactive tab label colour */
+.rpgx-ai-locked p {
+  font-size:   12px;
+  color:       #8a8aaa;
+  margin:      0;
+  line-height: 1.6;
+  max-width:   300px;
+}
+
+/* Tiny hint about the license key — slightly dimmer than body */
+.rpgx-ai-lock-key-hint {
+  font-size:  11px !important;
+  color:      #666688 !important;
+  margin-top: 4px !important;
+}
+
+
+/* ─── PATREON BUTTON ─────────────────────────────────────────────────────── */
+
+.rpgx-btn-patreon {
+  background:      #ff424d;
+  color:           #ffffff !important;
+  border:          1px solid #cc2030;
+  border-radius:   4px;
+  font-weight:     600;
+  font-size:       13px;
+  text-decoration: none !important;
+  margin-top:      4px;
+  padding:         9px 22px;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             7px;
+  transition:      background 0.15s, box-shadow 0.15s;
+  cursor:          pointer;
+}
+
+.rpgx-btn-patreon:hover {
+  background:  #ff5561;
+  border-color: #dd3040;
+  box-shadow:  0 0 14px rgba(255, 66, 77, 0.35);
+  color:       #ffffff !important;
+}
+
+
+/* ─── AI TAB: SMALL LOCK ICON ON TAB LABEL ──────────────────────────────── */
+
+.rpgx-tab-lock-icon {
+  font-size:      9px;
+  color:          #6a6a88;
+  margin-left:    3px;
+  vertical-align: middle;
+}
+
+
+/* ─── QUEST LOG FOOTER: PATREON UPGRADE LINK ─────────────────────────────── */
+
+.rpgx-log-footer {
+  padding:    8px 12px;
+  border-top: 1px solid #3a3a5c;
+  background: #22223a;
+  text-align: center;
+}
+
+.rpgx-upgrade-link {
+  font-size:       11px;
+  color:           #7a6030;
+  text-decoration: none;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             5px;
+  transition:      color 0.15s;
+}
+
+.rpgx-upgrade-link:hover {
+  color:           #d4a944;
+  text-decoration: none;
+}
+
+.rpgx-upgrade-link .fa-patreon {
+  color: #ff424d;
+}

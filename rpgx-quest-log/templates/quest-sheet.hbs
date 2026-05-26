@@ -1,0 +1,494 @@
+{{!-- templates/quest-sheet.hbs v3
+  Variables: quest, isGM, isPaidTier, protonDetected, canDistribute, hasRewards,
+             hasMilestones, milestones, milestonesRevealed,
+             hiddenMilestones, statuses
+
+  v3 CHANGES:
+  - "Quest Giver" section now accepts multiple assigners
+  - AI Generate tab: locked screen references Proton (no license key)
+  - protonDetected passed through for context-aware locked messaging
+--}}
+
+<form class="rpgx-sheet-form" autocomplete="off">
+
+  {{!-- ═══ TITLE ════════════════════════════════════════════════════════════════ --}}
+  <div class="rpgx-sheet-title-row">
+    {{#if isGM}}
+      <input type="text" name="title" class="rpgx-title-input"
+             value="{{quest.title}}" placeholder="Quest Title..." maxlength="100">
+    {{else}}
+      <h2 class="rpgx-title-display">{{quest.title}}</h2>
+    {{/if}}
+  </div>
+
+  {{!-- ═══ STATUS BAR ════════════════════════════════════════════════════════════ --}}
+  <div class="rpgx-status-bar">
+    {{#each statuses}}
+      <button type="button" class="rpgx-status-btn {{class}} {{#if (rpgx-eq ../quest.status value)}}is-active{{/if}}"
+              data-status="{{value}}" title="Mark as {{label}}" {{#unless ../isGM}}disabled{{/unless}}>
+        <i class="fas {{icon}}"></i>
+        <span>{{label}}</span>
+      </button>
+    {{/each}}
+  </div>
+
+  {{!-- ═══ TAB NAV ══════════════════════════════════════════════════════════════ --}}
+  <nav class="rpgx-sheet-tabs tabs">
+    <a class="item active" data-tab="details">
+      <i class="fas fa-file-lines"></i> Details
+    </a>
+    <a class="item" data-tab="milestones">
+      <i class="fas fa-list-check"></i> Milestones
+      {{#if hasMilestones}}<span class="rpgx-tab-dot"></span>{{/if}}
+    </a>
+    <a class="item" data-tab="rewards">
+      <i class="fas fa-treasure-chest"></i> Rewards
+      {{#if hasRewards}}<span class="rpgx-tab-dot"></span>{{/if}}
+    </a>
+    {{#if isGM}}
+      <a class="item" data-tab="ai">
+        <i class="fas fa-wand-magic-sparkles"></i> AI Generate
+        {{#unless isPaidTier}}<i class="fas fa-lock rpgx-tab-lock-icon"></i>{{/unless}}
+      </a>
+    {{/if}}
+  </nav>
+
+  <div class="rpgx-sheet-body">
+
+    {{!-- ══ DETAILS TAB ══════════════════════════════════════════════════════════ --}}
+    <div class="tab active" data-tab="details">
+
+      {{!-- ── QUEST GIVERS (multiple) ──────────────────────────────────────────── --}}
+      <section class="rpgx-section">
+        <label class="rpgx-section-label">
+          <i class="fas fa-person-walking-arrow-right"></i> Quest Giver(s)
+        </label>
+        <div class="drop-assigners rpgx-drop-zone rpgx-assignees-zone {{#unless isGM}}no-drop{{/unless}}"
+             title="{{#if isGM}}Drag actors here to set who gave this quest. Multiple quest givers are supported.{{else}}The NPC(s) who assigned this quest{{/if}}">
+
+          {{#if (rpgx-gt quest.assigners.length 0)}}
+            <div class="rpgx-assignees-list">
+              {{#each quest.assigners}}
+                <div class="rpgx-assignee-chip">
+                  <img class="rpgx-actor-portrait" src="{{this.img}}" alt="{{this.name}}"
+                       data-actor-id="{{this.actorId}}"
+                       title="Click to open {{this.name}}'s sheet">
+                  <span>{{this.name}}</span>
+                  {{#if ../isGM}}
+                    <button type="button" class="btn-remove-assigner rpgx-icon-btn danger"
+                            data-actor-id="{{this.actorId}}" title="Remove quest giver">
+                      <i class="fas fa-xmark"></i>
+                    </button>
+                  {{/if}}
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          {{#if isGM}}
+            <div class="rpgx-drop-hint small">
+              <i class="fas fa-person-circle-plus"></i>
+              <span>Drag an actor here — you can add multiple quest givers</span>
+            </div>
+          {{else}}
+            {{#unless (rpgx-gt quest.assigners.length 0)}}
+              <div class="rpgx-drop-hint"><span>No quest giver assigned.</span></div>
+            {{/unless}}
+          {{/if}}
+
+        </div>
+      </section>
+
+      {{!-- ── PARTY MEMBERS ──────────────────────────────────────────────────── --}}
+      <section class="rpgx-section">
+        <label class="rpgx-section-label">
+          <i class="fas fa-users"></i> Party Members
+        </label>
+        <div class="drop-assignees rpgx-drop-zone rpgx-assignees-zone {{#unless isGM}}no-drop{{/unless}}">
+          {{#if (rpgx-gt quest.assignees.length 0)}}
+            <div class="rpgx-assignees-list">
+              {{#each quest.assignees}}
+                <div class="rpgx-assignee-chip">
+                  <img class="rpgx-actor-portrait" src="{{this.img}}" alt="{{this.name}}"
+                       data-actor-id="{{this.actorId}}" title="Click to open {{this.name}}'s sheet">
+                  <span>{{this.name}}</span>
+                  {{#if ../isGM}}
+                    <button type="button" class="btn-remove-assignee rpgx-icon-btn danger"
+                            data-actor-id="{{this.actorId}}" title="Remove from quest">
+                      <i class="fas fa-xmark"></i>
+                    </button>
+                  {{/if}}
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+          {{#if isGM}}
+            <div class="rpgx-drop-hint small">
+              <i class="fas fa-user-plus"></i><span>Drop characters here</span>
+            </div>
+          {{else}}
+            {{#unless (rpgx-gt quest.assignees.length 0)}}
+              <div class="rpgx-drop-hint"><span>No characters assigned.</span></div>
+            {{/unless}}
+          {{/if}}
+        </div>
+      </section>
+
+      {{!-- ── DESCRIPTION ─────────────────────────────────────────────────── --}}
+      <section class="rpgx-section rpgx-section-grow">
+        <label class="rpgx-section-label">
+          <i class="fas fa-scroll"></i> Quest Description
+          <span class="rpgx-label-note">(Visible to all players)</span>
+        </label>
+        {{#if isGM}}
+          <textarea name="description" class="rpgx-textarea" rows="5"
+                    placeholder="Write the quest description here. This is what players will see...">{{quest.description}}</textarea>
+        {{else}}
+          <div class="rpgx-readonly-text">{{{quest.description}}}</div>
+        {{/if}}
+      </section>
+
+      {{!-- ── GM NOTES ────────────────────────────────────────────────────── --}}
+      {{#if isGM}}
+        <section class="rpgx-section rpgx-section-grow rpgx-gm-section">
+          <label class="rpgx-section-label">
+            <i class="fas fa-eye-slash"></i> GM Notes
+            <span class="rpgx-label-note rpgx-gm-only">(Hidden from players)</span>
+          </label>
+          <textarea name="gmNotes" class="rpgx-textarea rpgx-gm-textarea" rows="5"
+                    placeholder="The real plot, villain motives, hidden clues, plot twists... This is your space.">{{quest.gmNotes}}</textarea>
+        </section>
+      {{/if}}
+
+    </div>{{!-- end details --}}
+
+    {{!-- ══ MILESTONES TAB ════════════════════════════════════════════════════ --}}
+    <div class="tab" data-tab="milestones">
+
+      {{#if (rpgx-gt milestones.length 0)}}
+        <ul class="rpgx-milestone-list">
+          {{#each milestones}}
+            <li class="rpgx-milestone-row {{#if this.isCompleted}}milestone-completed{{/if}}{{#if this.isFailed}}milestone-failed{{/if}}"
+                data-milestone-id="{{this.id}}">
+
+              {{#if ../isGM}}
+                <button type="button"
+                        class="btn-milestone-complete rpgx-milestone-btn {{#if this.isCompleted}}ms-btn-active-complete{{/if}}"
+                        data-milestone-id="{{this.id}}"
+                        title="{{#if this.isCompleted}}Unmark complete{{else}}Mark complete{{/if}}">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button type="button"
+                        class="btn-milestone-fail rpgx-milestone-btn {{#if this.isFailed}}ms-btn-active-fail{{/if}}"
+                        data-milestone-id="{{this.id}}"
+                        title="{{#if this.isFailed}}Unmark failed{{else}}Mark failed{{/if}}">
+                  <i class="fas fa-xmark"></i>
+                </button>
+              {{else}}
+                <span class="rpgx-milestone-status-icon">
+                  {{#if this.isCompleted}}<i class="fas fa-check" style="color:#3dba5a;"></i>
+                  {{else if this.isFailed}}<i class="fas fa-xmark" style="color:#e84040;"></i>
+                  {{else}}<i class="fas fa-circle" style="color:#555;font-size:8px;"></i>
+                  {{/if}}
+                </span>
+              {{/if}}
+
+              {{#if ../isGM}}
+                <input type="text" class="rpgx-milestone-text rpgx-input-full"
+                       value="{{this.text}}" placeholder="Milestone description..."
+                       data-milestone-id="{{this.id}}">
+                <button type="button" class="btn-remove-milestone rpgx-icon-btn danger"
+                        data-milestone-id="{{this.id}}" title="Remove milestone">
+                  <i class="fas fa-trash"></i>
+                </button>
+              {{else}}
+                <span class="rpgx-milestone-text-display">{{this.text}}</span>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="rpgx-empty-state">
+          <i class="fas fa-list-check rpgx-empty-icon"></i>
+          <p class="rpgx-empty-label">No milestones yet.</p>
+          {{#if isGM}}
+            <p class="rpgx-empty-sub">Break the quest into steps to track progress.</p>
+          {{else}}
+            <p class="rpgx-empty-sub">No milestones have been added to this quest.</p>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if isGM}}
+        <section class="rpgx-section rpgx-gm-section rpgx-hidden-milestones-section">
+          <label class="rpgx-section-label">
+            <i class="fas fa-eye-slash"></i> Hidden Milestones
+            <span class="rpgx-label-note rpgx-gm-only">(Hidden from players — future plans, secret steps)</span>
+          </label>
+          <textarea name="hiddenMilestones" class="rpgx-textarea rpgx-gm-textarea" rows="4"
+                    placeholder="Future milestones you don't want to reveal yet...&#10;Secret steps, planned twists, upcoming objectives.">{{hiddenMilestones}}</textarea>
+        </section>
+        <div class="rpgx-milestone-add-row">
+          <button type="button" class="btn-add-milestone rpgx-btn rpgx-btn-secondary">
+            <i class="fas fa-plus"></i> Add Milestone
+          </button>
+        </div>
+      {{/if}}
+
+    </div>{{!-- end milestones --}}
+
+    {{!-- ══ REWARDS TAB ════════════════════════════════════════════════════════ --}}
+    <div class="tab" data-tab="rewards">
+
+      {{#if isGM}}
+        <div class="rpgx-reveal-bar">
+          <span class="rpgx-reveal-status">
+            {{#if quest.rewards.revealed}}
+              <i class="fas fa-eye" style="color:#4a9eff;"></i> Rewards visible to players
+            {{else}}
+              <i class="fas fa-eye-slash"></i> Rewards hidden from players
+            {{/if}}
+          </span>
+          <button type="button" class="btn-reveal-rewards rpgx-btn {{#if quest.rewards.revealed}}rpgx-btn-secondary{{else}}rpgx-btn-primary{{/if}}">
+            {{#if quest.rewards.revealed}}
+              <i class="fas fa-eye-slash"></i> Hide
+            {{else}}
+              <i class="fas fa-eye"></i> Reveal to Players
+            {{/if}}
+          </button>
+        </div>
+      {{/if}}
+
+      {{#if (or isGM quest.rewards.revealed)}}
+
+        <section class="rpgx-section">
+          <label class="rpgx-section-label"><i class="fas fa-backpack"></i> Items</label>
+          <div class="drop-items rpgx-drop-zone rpgx-items-zone {{#unless isGM}}no-drop{{/unless}}">
+            {{#if (rpgx-gt quest.rewards.items.length 0)}}
+              <ul class="rpgx-items-list">
+                {{#each quest.rewards.items}}
+                  <li class="rpgx-item-row">
+                    <img class="rpgx-item-icon" src="{{this.img}}" alt="{{this.name}}">
+                    <span class="rpgx-item-name rpgx-item-name-link"
+                          data-item-uuid="{{this.uuid}}" data-item-id="{{this.itemId}}"
+                          title="Click to view {{this.name}}">{{this.name}}</span>
+                    <span class="rpgx-item-qty">×{{this.quantity}}</span>
+                    {{#if ../isGM}}
+                      <select class="rpgx-item-assign rpgx-item-select" data-index="{{this.index}}"
+                              title="Assign this item to a character">
+                        <option value="">— Assign to —</option>
+                        {{#each this.assignees}}
+                          <option value="{{this.actorId}}" {{#if this.selected}}selected{{/if}}>{{this.name}}</option>
+                        {{/each}}
+                      </select>
+                      <button type="button" class="btn-remove-item rpgx-icon-btn danger"
+                              data-index="{{this.index}}" title="Remove item">
+                        <i class="fas fa-xmark"></i>
+                      </button>
+                    {{/if}}
+                  </li>
+                {{/each}}
+              </ul>
+            {{/if}}
+            {{#if isGM}}
+              <div class="rpgx-drop-hint small">
+                <i class="fas fa-plus-circle"></i><span>Drag items here from the sidebar</span>
+              </div>
+            {{else}}
+              {{#unless (rpgx-gt quest.rewards.items.length 0)}}
+                <div class="rpgx-drop-hint"><span>No item rewards.</span></div>
+              {{/unless}}
+            {{/if}}
+          </div>
+          {{#if isGM}}
+            <button type="button" class="btn-award-loot rpgx-btn rpgx-btn-secondary"
+                    style="margin-top:8px; width:100%;"
+                    title="Transfer all assigned items to their character inventories">
+              <i class="fas fa-hand-holding-box"></i> Award Loot
+            </button>
+          {{/if}}
+        </section>
+
+        <section class="rpgx-section">
+          <label class="rpgx-section-label"><i class="fas fa-coins"></i> Currency Reward</label>
+          <div class="rpgx-currency-grid">
+            <div class="rpgx-currency-field">
+              <label>PP</label>
+              {{#if isGM}}<input type="number" name="rewards.pp" value="{{quest.rewards.pp}}" min="0" step="1" class="rpgx-currency-input">
+              {{else}}<span class="rpgx-currency-display">{{quest.rewards.pp}}</span>{{/if}}
+            </div>
+            <div class="rpgx-currency-field">
+              <label>GP</label>
+              {{#if isGM}}<input type="number" name="rewards.gp" value="{{quest.rewards.gp}}" min="0" step="1" class="rpgx-currency-input">
+              {{else}}<span class="rpgx-currency-display">{{quest.rewards.gp}}</span>{{/if}}
+            </div>
+            <div class="rpgx-currency-field">
+              <label>SP</label>
+              {{#if isGM}}<input type="number" name="rewards.sp" value="{{quest.rewards.sp}}" min="0" step="1" class="rpgx-currency-input">
+              {{else}}<span class="rpgx-currency-display">{{quest.rewards.sp}}</span>{{/if}}
+            </div>
+            <div class="rpgx-currency-field">
+              <label>CP</label>
+              {{#if isGM}}<input type="number" name="rewards.cp" value="{{quest.rewards.cp}}" min="0" step="1" class="rpgx-currency-input">
+              {{else}}<span class="rpgx-currency-display">{{quest.rewards.cp}}</span>{{/if}}
+            </div>
+          </div>
+          <div class="rpgx-custom-currency">
+            <label class="rpgx-section-label-sm">Other Currency / Notes</label>
+            {{#if isGM}}
+              <input type="text" name="rewards.customCurrency"
+                     value="{{quest.rewards.customCurrency}}"
+                     placeholder="e.g. 2 Gems, 1 Magic Item, Trade Goods..."
+                     class="rpgx-input-full">
+            {{else}}
+              {{#if quest.rewards.customCurrency}}<span>{{quest.rewards.customCurrency}}</span>{{/if}}
+            {{/if}}
+          </div>
+        </section>
+
+        <section class="rpgx-section rpgx-xp-section">
+          <label class="rpgx-section-label"><i class="fas fa-star"></i> Experience Points (XP)</label>
+          <div class="rpgx-xp-row">
+            {{#if isGM}}
+              <input type="number" name="rewards.xp" value="{{quest.rewards.xp}}"
+                     min="0" step="50" class="rpgx-xp-input" placeholder="0">
+              <span class="rpgx-xp-label">XP</span>
+            {{else}}
+              <span class="rpgx-xp-display">{{quest.rewards.xp}} XP</span>
+            {{/if}}
+          </div>
+        </section>
+
+      {{else}}
+        <div class="rpgx-rewards-hidden">
+          <i class="fas fa-lock"></i>
+          <p>Rewards will be revealed when the quest is completed.</p>
+        </div>
+      {{/if}}
+
+      {{#if isGM}}
+        <section class="rpgx-section rpgx-distribute-section">
+          <label class="rpgx-section-label">
+            <i class="fas fa-people-arrows"></i> Distribute Rewards
+            {{#unless canDistribute}}<span class="rpgx-label-note">(Assign characters first)</span>{{/unless}}
+          </label>
+          <div class="rpgx-distribute-buttons">
+            <button type="button" class="btn-distribute-xp rpgx-btn rpgx-btn-secondary"
+                    {{#unless canDistribute}}disabled{{/unless}}
+                    title="Split XP evenly and apply to character sheets">
+              <i class="fas fa-star"></i> Award XP (Split)
+            </button>
+            <button type="button" class="btn-distribute-currency rpgx-btn rpgx-btn-secondary"
+                    {{#unless canDistribute}}disabled{{/unless}}
+                    title="Split currency evenly and apply to character sheets">
+              <i class="fas fa-coins"></i> Award Currency (Split)
+            </button>
+          </div>
+        </section>
+      {{/if}}
+
+    </div>{{!-- end rewards --}}
+
+    {{!-- ══ AI GENERATE TAB ════════════════════════════════════════════════════ --}}
+    {{#if isGM}}
+      <div class="tab" data-tab="ai">
+
+        {{#if isPaidTier}}
+          {{!-- ── PAID TIER: Full AI generation panel ─────────────────────────── --}}
+          <div class="rpgx-ai-panel">
+            <div class="rpgx-ai-header">
+              <i class="fas fa-brain rpgx-ai-icon"></i>
+              <h3>AI Quest Generator</h3>
+              <p>Uses your local Ollama AI to generate quest content via RPGX Proton.</p>
+            </div>
+            <div class="rpgx-ai-prompt-area">
+              <label class="rpgx-section-label">
+                <i class="fas fa-pencil"></i> Prompt (optional)
+              </label>
+              <textarea class="ollama-prompt rpgx-textarea" rows="3"
+                        placeholder="Leave blank for a random quest, or give a theme...&#10;Examples:&#10;• A merchant guild with a dark secret&#10;• The players discover an ancient ruin"></textarea>
+            </div>
+            <button type="button" class="btn-generate-quest rpgx-btn rpgx-btn-ai">
+              <i class="fas fa-wand-magic-sparkles"></i> Generate Quest
+            </button>
+            <div class="rpgx-ai-warning">
+              <i class="fas fa-triangle-exclamation"></i>
+              <span>Generated content will <strong>replace</strong> the current title, description, and GM notes. Review before saving!</span>
+            </div>
+            <div class="rpgx-ai-setup">
+              <p><strong>AI Setup:</strong> Ollama and your AI models are managed through RPGX Proton.
+                 Change the active model in <strong>RPGX Proton → Settings</strong>, or set the model name in
+                 <strong>Game Settings → Module Settings → RPGX Quest Log</strong>.</p>
+            </div>
+          </div>
+
+        {{else}}
+          {{!-- ── FREE TIER: Locked screen — Proton required ──────────────────── --}}
+          <div class="rpgx-ai-locked">
+
+            {{!-- Logo — falls back to CSS text if image not found --}}
+            <div class="rpgx-ai-lock-logo-wrap">
+              <img src="modules/rpgx-quest-log/RPGX_Logo.png"
+                   alt="RPGX Game Studios"
+                   class="rpgx-ai-lock-logo"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+              <div class="rpgx-ai-lock-logo-fallback">RPGX<br>Game Studios</div>
+            </div>
+
+            <div class="rpgx-ai-lock-content">
+              <i class="fas fa-lock rpgx-ai-lock-icon"></i>
+              <h3>AI Generation is a Premium Feature</h3>
+
+              {{!-- Context-aware message: different if Proton is detected but sub lapsed --}}
+              {{#if protonDetected}}
+                <p>
+                  RPGX Proton is running but no active subscription was found.
+                  Subscribe on Patreon to unlock AI quest generation and unlimited quests.
+                </p>
+                <a href="https://www.patreon.com/c/rpgxstudios" target="_blank"
+                   class="rpgx-btn rpgx-btn-patreon">
+                  <i class="fab fa-patreon"></i> Subscribe on Patreon
+                </a>
+              {{else}}
+                <p>
+                  Premium features require the <strong>RPGX Proton</strong> desktop application
+                  with an active Patreon subscription.
+                </p>
+                <a href="https://www.rpgxstudios.com" target="_blank"
+                   class="rpgx-btn rpgx-btn-primary" style="margin-bottom:8px;">
+                  <i class="fas fa-download"></i> Download RPGX Proton Free
+                </a>
+                <a href="https://www.patreon.com/c/rpgxstudios" target="_blank"
+                   class="rpgx-btn rpgx-btn-patreon">
+                  <i class="fab fa-patreon"></i> Subscribe on Patreon
+                </a>
+              {{/if}}
+
+              <p class="rpgx-ai-lock-key-hint">
+                Already a subscriber? Make sure RPGX Proton is running<br>
+                and connected to your Patreon account.
+              </p>
+            </div>
+
+          </div>
+        {{/if}}
+
+      </div>
+    {{/if}}
+
+  </div>{{!-- end sheet body --}}
+
+  {{!-- ═══ FOOTER ══════════════════════════════════════════════════════════════ --}}
+  {{#if isGM}}
+    <footer class="rpgx-sheet-footer">
+      <button type="button" class="btn-delete-quest rpgx-btn rpgx-btn-danger">
+        <i class="fas fa-trash"></i> Delete
+      </button>
+      <div class="rpgx-footer-spacer"></div>
+      <button type="submit" class="rpgx-btn rpgx-btn-primary">
+        <i class="fas fa-floppy-disk"></i> Save Quest
+      </button>
+    </footer>
+  {{/if}}
+
+</form>

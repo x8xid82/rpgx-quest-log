@@ -1,0 +1,162 @@
+{{!-- templates/quest-log.hbs v3
+  IMPORTANT: isGM / isPaidTier / protonDetected live at ROOT context.
+  Inside {{#each tabs}} -> {{#each quests}}, use ../../isGM to reach root.
+  
+  v3 CHANGES:
+  - Status stripe is a clickable button for GMs (opens Change Status dialog)
+  - Assigner display reads from quest.assigners array (shows first portrait)
+  - Header shows quest count with Pro/Free badge
+  - Footer: shows Proton-aware upgrade messaging (no license key references)
+--}}
+
+<div class="rpgx-log-wrapper">
+
+  <header class="rpgx-log-header">
+    <div class="rpgx-header-left">
+      <i class="fas fa-scroll rpgx-header-icon"></i>
+      <span class="rpgx-header-title">Quest Log</span>
+    </div>
+    <div class="rpgx-header-right">
+
+      {{!-- Tier badge --}}
+      {{#if isPaidTier}}
+        <span class="rpgx-tier-badge tier-pro" title="RPGX Pro — Unlimited Quests &amp; AI Generation">⭐ PRO</span>
+      {{else}}
+        <span class="rpgx-tier-badge tier-free" title="Free tier: {{questCount}} of {{maxQuests}} quests used">
+          {{questCount}} / {{maxQuests}}
+        </span>
+      {{/if}}
+
+      {{#if isGM}}
+        <button class="btn-new-quest rpgx-btn rpgx-btn-primary" title="Create a new quest">
+          <i class="fas fa-plus"></i> New Quest
+        </button>
+      {{/if}}
+    </div>
+  </header>
+
+  <nav class="rpgx-tabs tabs">
+    {{#each tabs}}
+      <a class="item {{#unless @index}}active{{/unless}}" data-tab="{{id}}" title="{{label}} quests">
+        <i class="fas {{icon}}"></i>
+        <span class="tab-label">{{label}}</span>
+        {{#if (rpgx-gt quests.length 0)}}
+          <span class="rpgx-tab-count">{{quests.length}}</span>
+        {{/if}}
+      </a>
+    {{/each}}
+  </nav>
+
+  <div class="rpgx-tab-body">
+    {{#each tabs}}
+      <div class="tab {{rpgx-status-class id}}-tab" data-tab="{{id}}">
+
+        {{#if (rpgx-gt quests.length 0)}}
+          <ul class="rpgx-quest-list">
+            {{#each quests}}
+              <li class="rpgx-quest-row {{rpgx-status-class this.status}}"
+                  data-quest-id="{{this.id}}">
+
+                {{!-- ── Quest Giver Portrait ──────────────────────────────────────────
+                     Shows the FIRST assigner's portrait (or the placeholder if none).
+                --}}
+                <div class="rpgx-row-assigner">
+                  {{#if (rpgx-gt this.assigners.length 0)}}
+                    <img src="{{this.assigners.[0].img}}"
+                         alt="{{this.assigners.[0].name}}"
+                         title="Quest Giver: {{this.assigners.[0].name}}{{#if (rpgx-gt this.assigners.length 1)}} (+ more){{/if}}">
+                    {{#if (rpgx-gt this.assigners.length 1)}}
+                      <div class="rpgx-row-assigner-plus" title="{{this.assigners.length}} quest givers assigned">
+                        +{{this.assigners.length}}
+                      </div>
+                    {{/if}}
+                  {{else}}
+                    <div class="rpgx-no-portrait" title="No quest giver assigned">
+                      <i class="fas fa-question"></i>
+                    </div>
+                  {{/if}}
+                </div>
+
+                {{!-- ── Quest Title + Assignee Pips ────────────────────────────────── --}}
+                <div class="rpgx-row-info">
+                  <span class="rpgx-row-title">{{this.title}}</span>
+                  {{#if (rpgx-gt this.assignees.length 0)}}
+                    <div class="rpgx-row-assignees">
+                      {{#each this.assignees}}
+                        <img class="rpgx-pip" src="{{this.img}}" alt="{{this.name}}" title="{{this.name}}">
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                </div>
+
+                {{!-- ── Status Icon ───────────────────────────────────────────────────
+                     For GMs: clicking this opens the "Change Quest Status" dialog.
+                     For players: it's just a visual indicator (no click).
+                --}}
+                {{#if ../../isGM}}
+                  <div class="rpgx-row-status-stripe btn-row-status"
+                       data-quest-id="{{this.id}}"
+                       title="Click to change status (currently: {{this.status}})">
+                    <i class="fas {{rpgx-status-icon this.status}}"></i>
+                  </div>
+                {{else}}
+                  <div class="rpgx-row-status-stripe" title="Status: {{this.status}}">
+                    <i class="fas {{rpgx-status-icon this.status}}"></i>
+                  </div>
+                {{/if}}
+
+                {{!-- ── Delete button (GM only) ────────────────────────────────────── --}}
+                {{#if ../../isGM}}
+                  <button class="btn-row-delete rpgx-row-trash" title="Delete Quest">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                {{/if}}
+
+              </li>
+            {{/each}}
+          </ul>
+
+        {{else}}
+          <div class="rpgx-empty-state">
+            <i class="fas fa-dragon rpgx-empty-icon"></i>
+            <p class="rpgx-empty-label">No {{id}} quests.</p>
+            {{#if (rpgx-eq id "active")}}
+              {{#if ../isGM}}
+                <button class="btn-new-quest rpgx-btn rpgx-btn-secondary">
+                  <i class="fas fa-feather-pointed"></i> Write the first quest
+                </button>
+              {{else}}
+                <p class="rpgx-empty-sub">Your GM hasn't assigned any quests yet.</p>
+              {{/if}}
+            {{/if}}
+          </div>
+        {{/if}}
+
+      </div>
+    {{/each}}
+  </div>
+
+  {{!-- Footer: upgrade prompt for free-tier GMs.
+       Two different messages depending on whether Proton is running:
+         - Proton detected but no active sub → direct them to Patreon
+         - Proton not detected → direct them to download Proton first
+  --}}
+  {{#if isGM}}
+    {{#unless isPaidTier}}
+      <footer class="rpgx-log-footer">
+        {{#if protonDetected}}
+          {{!-- Proton is running but subscription isn't active --}}
+          <a class="rpgx-upgrade-link" href="https://www.patreon.com/c/rpgxstudios" target="_blank">
+            <i class="fab fa-patreon"></i> Subscribe on Patreon to unlock premium features
+          </a>
+        {{else}}
+          {{!-- Proton not detected / not running --}}
+          <a class="rpgx-upgrade-link" href="https://www.rpgxstudios.com" target="_blank">
+            <i class="fas fa-circle-dot"></i> RPGX Proton required for premium features — rpgxstudios.com
+          </a>
+        {{/if}}
+      </footer>
+    {{/unless}}
+  {{/if}}
+
+</div>
